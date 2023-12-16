@@ -1,0 +1,61 @@
+<div class="card-header">
+    <h4>Add User</h4>
+</div>
+<div class="card-body">
+    <form [formGroup]="userForm">
+        <div class="input-group mb-1" *ngFor="let field of formControlsArray">
+
+            <ng-container [ngSwitch]="field.type">
+                <!-- Text field  block-->
+                <div class="w-100" *ngSwitchCase="'textField'">
+                    <label class="small">{{field.label}}</label>
+                    <div>
+                        <input class="form-control w-100" type="text" placeholder="{{field.placeholder}}"
+                            formControlName="{{field.formControlName}}" />
+                    </div>
+                </div>
+
+                <!-- Select field block -->
+                <div class="w-100" *ngSwitchCase="'selectField'">
+                    <label class="small">{{field.label}}</label>
+                    <select class="form-control w-100" formControlName="{{field.formControlName}}">
+                        <option disabled [value]="">--Select--</option>
+                        <option *ngFor="let option of field.options" [value]="option.value">{{option.name}}</option>
+                    </select>
+                </div>
+
+                <!-- Address field block -->
+                <ng-container *ngSwitchCase="'addressField'">
+                    <ng-container formArrayName="address">
+                        <div *ngFor="let addressForm of address.controls; index as i" class="w-100 d-flex">
+                            <ng-container [formGroup]="addressForm">
+                                <label class="small">{{field.label}} {{i + 1}}</label>
+                                <div>
+                                    <input class="form-control w-100" type="text" placeholder="{{field.placeholder}}"
+                                        formControlName="line1" />
+                                </div>
+                                <div class="card-footer">
+                                    <button type="button" class="btn btn-outline-dark"
+                                        (click)="addAddressForm()">Add</button>
+                                    <button *ngIf="i > 0" type="button" class="btn btn-outline-dark"
+                                        (click)="removeAddressForm(i)">Remove</button>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </ng-container>
+
+            <!-- Error block -->
+            <div class="text-danger small" *ngIf="isSubmitted &&
+            userForm.get(field.formControlName)?.hasError('required')">
+                {{field.reqErrMsg}}
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<div class="card-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="onSubmit()">Save</button>
+</div>

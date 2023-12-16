@@ -1,0 +1,36 @@
+<button class="btn btn-success" (click)="addUser()">
+    Add User
+</button>
+
+<select placeholder="Gender filter" [(ngModel)]="genderFilter" (change)="filterList()">
+    <option value="">Select Gender</option>
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+</select>
+
+<input placeholder="Role search" type="text" (keyup)="filterList()" [(ngModel)]="roleFilter">
+
+<table class="table">
+    <thead>
+        <tr>
+            <th *ngFor="let column of tableColumns" scope="col">{{column.name}}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of filteredData">
+            <td *ngFor="let column of tableColumns">
+                <span *ngIf="column.type == 'text'">{{data[column.value]}}</span>
+                <span *ngIf="column.type == 'address'">
+                    <!-- {{data[column.value]}} -->
+                    <span *ngFor="let address of data.address   ;let i = index">
+                        {{i + 1}}) {{address.line1}}
+                    </span>
+                </span>
+            </td>
+            <td>
+                <button (click)="editUser(data.uid)" class="p-1 m-1 btn btn-primary">Edit</button>
+                <button (click)="deleteUser(data.uid)" class="p-1 m-1 btn btn-danger">Delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
